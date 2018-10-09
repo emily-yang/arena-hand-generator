@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Tesseract from 'tesseract.js';
 
 class App extends Component {
 
@@ -32,10 +31,13 @@ class App extends Component {
           }
           img.src = window.URL.createObjectURL(blob);
 
-          Tesseract.recognize(canvas)
-            .then(function(result){
-              console.log(result);
+          window.Tesseract.recognize(blob)
+            .progress(message => console.log(message))
+            .catch(err => console.error(err))
+            .then(result => {
+              result.lines.forEach(line => console.log(line.text));
             });
+
         }
       }
     }
