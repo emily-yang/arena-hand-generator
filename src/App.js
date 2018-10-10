@@ -1,24 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+
+  componentDidMount() {
+    const canvas = this.refs.canvas;
+    let text;
+    const textList = [];
+    window.addEventListener('paste', extractTextFromImage);
+
+    async function extractTextFromImage(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // do nothing if clipboard is empty
+      if (!event.clipboardData) {
+        console.log('nothing in clipboard!');
+        return;
+      }
+
+      const items = event.clipboardData.items;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.includes('image')) {
+          const blob = items[i].getAsFile();
+          const ctx = canvas.getContext('2d');
+          const img = new Image();
+          img.onload = function() {
+            canvas.width = this.width;
+            canvas.height = this.height;
+            ctx.drawImage(img, 0, 0);
+          }
+          img.src = window.URL.createObjectURL(blob);
+
+          text = await window.Tesseract.recognize(blob);
+        } 
+
+        if (text) {
+          text.lines.forEach(line => {textList.push(line.text)});
+          console.log(textList);
+        } else
+          console.log("no text found");
+      }
+    }
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <canvas ref="canvas" className="canvas"></canvas>
         </header>
       </div>
     );
