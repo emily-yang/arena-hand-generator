@@ -40,6 +40,15 @@ class App extends Component {
           console.log(textList);
         } else
           console.log("no text found");
+
+          window.Tesseract.recognize(blob)
+            .progress(message => console.log(message))
+            .catch(err => console.error(err))
+            .then(result => {
+              result.lines.forEach(line => console.log(line.text));
+            });
+
+        }
       }
     }
   }
