@@ -3,62 +3,52 @@ import './App.css';
 
 class App extends Component {
 
-  componentDidMount() {
-    const canvas = this.refs.canvas;
-    let text;
-    const textList = [];
-    window.addEventListener('paste', extractTextFromImage);
+    fileRef = React.createRef();
+    submitBtn = React.createRef();
+    resultsRef = React.createRef();
 
-    async function extractTextFromImage(event) {
+    getFileLocation = event => {
       event.preventDefault();
-      event.stopPropagation();
+      const path = this.fileRef.current;
 
-      // do nothing if clipboard is empty
-      if (!event.clipboardData) {
-        console.log('nothing in clipboard!');
-        return;
-      }
-
-      const items = event.clipboardData.items;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.includes('image')) {
-          const blob = items[i].getAsFile();
-          const ctx = canvas.getContext('2d');
-          const img = new Image();
-          img.onload = function() {
-            canvas.width = this.width;
-            canvas.height = this.height;
-            ctx.drawImage(img, 0, 0);
-          }
-          img.src = window.URL.createObjectURL(blob);
-
-          text = await window.Tesseract.recognize(blob);
-        } 
-
-        if (text) {
-          text.lines.forEach(line => {textList.push(line.text)});
-          console.log(textList);
-        } else
-          console.log("no text found");
-
-          window.Tesseract.recognize(blob)
-            .progress(message => console.log(message))
-            .catch(err => console.error(err))
-            .then(result => {
-              result.lines.forEach(line => console.log(line.text));
-            });
-
-        }
-      }
+        const file = path.files[0];
+        console.log('file is', file);
+      this.fetchResults(file);
     }
-  }
+
+     fetchResults = async (file) => {
+      let text = ""
+      console.log('got this far')
+      const fileReader = new FileReader();
+      fileReader.onload = event => {
+        const results = this.resultsRef;
+        text = event.target.result;
+        console.log(text);
+      
+      }
+      await fileReader.readAsText(file);
+    }
+    
+  
+
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <canvas ref="canvas" className="canvas"></canvas>
-        </header>
+      <div className="container">
+        <form>
+          <input 
+            type="file" 
+            ref={this.fileRef} 
+            placeholder="Enter file location" 
+            onChange={this.getFileLocation}
+          />
+          <button 
+            type="submit"
+            className="button" 
+            ref={this.submitBtn}
+          >Submit</button>
+        </form>
+        <div className="results" ref={this.resultsRef}></div>
       </div>
     );
   }
