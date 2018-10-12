@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
+import LogReader from './LogReader';
+import Hand from './Hand';
 import './App.css';
 
 class App extends Component {
 
-    state = {
-      logFileText: null
-    }
+  fileRef = React.createRef();
 
-    fileRef = React.createRef();
-    submitBtn = React.createRef();
-    resultsRef = React.createRef();
+  state = {
+    logFileText: null
+  }
 
-    getFileLocation = async event => {
+      getFileLocation = async event => {
       event.preventDefault();
-      const path = this.fileRef.current;
-
-        const file = path.files[0];
+      console.log(this.fileRef);
+      const path = this.fileRef.current.pathRef.current;
+      const file = path.files[0];
 
         try {
           const contents = await this.fetchResults(file);
+          console.log(contents);
           this.setState({
             logFileText: contents
           });
@@ -28,10 +29,11 @@ class App extends Component {
     }
 
     fetchResults = file => {
-      let text = "default text";
       const fileReader = new FileReader();
 
       return new Promise((resolve, reject) => {
+        fileReader.readAsText(file);
+        
         fileReader.onerror = () => {
           fileReader.abort();
           reject(new DOMException("Could not parse log"));
@@ -41,33 +43,15 @@ class App extends Component {
           resolve(fileReader.result);
         }
 
-        fileReader.readAsText(file);
       })
-
     }
 
-    printResults = (text) => {
-      console.log(text);
-    }
-  
 
   render() {
     return (
-      <div className="container">
-        <form>
-          <input 
-            type="file" 
-            ref={this.fileRef} 
-            placeholder="Enter file location" 
-            onChange={this.getFileLocation}
-          />
-          <button 
-            type="submit"
-            className="button" 
-            ref={this.submitBtn}
-          >Submit</button>
-        </form>
-        <div className="results" ref={this.resultsRef}></div>
+      <div className="wrapper">
+        <LogReader ref={this.fileRef} getFileLocation={this.getFileLocation} />
+        <Hand text={this.state.logFileText}/>
       </div>
     );
   }
