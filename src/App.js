@@ -3,34 +3,53 @@ import './App.css';
 
 class App extends Component {
 
+    state = {
+      logFileText: null
+    }
+
     fileRef = React.createRef();
     submitBtn = React.createRef();
     resultsRef = React.createRef();
 
-    getFileLocation = event => {
+    getFileLocation = async event => {
       event.preventDefault();
       const path = this.fileRef.current;
 
         const file = path.files[0];
-        console.log('file is', file);
-      this.fetchResults(file);
+
+        try {
+          const contents = await this.fetchResults(file);
+          this.setState({
+            logFileText: contents
+          });
+        } catch (err) {
+          console.error(err);
+        }
     }
 
-     fetchResults = async (file) => {
-      let text = ""
-      console.log('got this far')
+    fetchResults = file => {
+      let text = "default text";
       const fileReader = new FileReader();
-      fileReader.onload = event => {
-        const results = this.resultsRef;
-        text = event.target.result;
-        console.log(text);
-      
-      }
-      await fileReader.readAsText(file);
-    }
-    
-  
 
+      return new Promise((resolve, reject) => {
+        fileReader.onerror = () => {
+          fileReader.abort();
+          reject(new DOMException("Could not parse log"));
+        }
+
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        }
+
+        fileReader.readAsText(file);
+      })
+
+    }
+
+    printResults = (text) => {
+      console.log(text);
+    }
+  
 
   render() {
     return (
