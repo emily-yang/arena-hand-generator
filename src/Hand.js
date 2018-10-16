@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 
 class Hand extends Component {
+
+/*					{(this.props.hand).map(card => 
+					<img src={card} key={card} alt="" />
+				)}*/
+
 	render() {
 		return (
 			<div className="hand">
-				<p className="placeholder">{this.props.text}</p>
+				{(this.props.hand).map(img =>
+					<img src={img} key={img} alt="" />
+				)}
 			</div>
 		);
 	}
