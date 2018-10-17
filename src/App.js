@@ -7,14 +7,13 @@ import './App.css';
 class App extends Component {
 
 	fileRef = React.createRef();
-	imgRef = React.createRef();
 
 	state = {
 		cards: null,
 		logFileText: "empty",
 		deck: null,
-		imgSrc: null,
-		hand: []
+		hand: [],
+		handSize: 7
 	}
 
 	getLogPath = async event => {
@@ -30,26 +29,13 @@ class App extends Component {
 			});
 			const cards = parseLog(this.state.logFileText);
 			this.setState( {cards} );
-
-/*			// test scryfall api
-			const url = "https://api.scryfall.com/cards/mtgo/68509";
-			const response = await fetch(url, {
-				method: "GET",
-				format: "image",
-				redirect: "follow"
-			});
-			const json  = await response.json()
-			const cardImg = json.image_uris.small;
-			this.setState( {imgSrc: cardImg });
-*/
-			
 		} catch (err) {
 			console.error(err);
 		}
 
 		// testing
 		this.generateDeck();
-		// this.drawCards(7);
+		this.drawCards(7);
 
 	}
 
@@ -98,11 +84,11 @@ class App extends Component {
 			return;
 		}
 		let hand = [];
-		const indices = new Set();
+		const drawnSet = new Set();
 		while (hand.length < num) {
 			const card = Math.floor(Math.random() * deck.length);
-			if (!indices.has(card)) {
-				indices.add(card);
+			if (!drawnSet.has(card)) {
+				drawnSet.add(card);
 				hand.push(deck[card]);
 			}
 		}
@@ -112,20 +98,30 @@ class App extends Component {
 
 	}
 
+	handleNewDraw = async () => {
+		await this.setState( {handSize: 7} );
+		this.drawCards(this.state.handSize);
+	}
+
+	handleMulligan = async () => {
+		const handSize = this.state.handSize - 1;
+		await this.setState( {handSize} );
+		this.drawCards(handSize);
+	}
+
 	getCardImg = async id => {
 		const url = `https://api.scryfall.com/cards/mtgo/${id}`;
 		try {
-		const response = await fetch(url, {
-			method: "GET",
-			format: "image",
-			redirect: "follow"
-		});
-		const json = await response.json();
-		return json.image_uris.small;
-	} catch(e) {
-		console.error(e);
-	}
-
+			const response = await fetch(url, {
+				method: "GET",
+				format: "image",
+				redirect: "follow"
+			});
+			const json = await response.json();
+			return json.image_uris.small;
+		} catch(e) {
+			console.error(e);
+		}
 	}
 
 
@@ -133,9 +129,9 @@ class App extends Component {
 		return (
 			<div className="wrapper">
 				<LogReader ref={this.fileRef} getLogPath={this.getLogPath} />
-				<button onClick={()=> this.drawCards(7)}>Draw hand</button>
-				<img src={this.state.imgSrc} alt="" className="card" ref={this.imgRef} />
 				<Hand text={this.state.logFileText} hand={this.state.hand} />
+				<button className="button" onClick={this.handleNewDraw}>Reset hand</button>
+				<button className="button" onClick={this.handleMulligan} >Mulligan</button>
 			</div>
 			);
 	}

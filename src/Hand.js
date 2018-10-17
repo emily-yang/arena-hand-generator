@@ -7,10 +7,11 @@ class Hand extends Component {
 				)}*/
 
 	render() {
+		let i = 1;
 		return (
 			<div className="hand">
 				{(this.props.hand).map(img =>
-					<img src={img} key={img} alt="" />
+					<img src={img} key={`card${i++}`} alt="" />
 				)}
 			</div>
 		);
