@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import LogReader from './LogReader';
 import Hand from './Hand';
+import ResetHandButton from './ResetHandButton';
+import MulliganButton from './MulliganButton';
 import { parseLog } from './parser';
 import './App.css';
 
@@ -13,7 +15,9 @@ class App extends Component {
 		logFileText: "empty",
 		deck: null,
 		hand: [],
-		handSize: 7
+		handSize: 7,
+		showReset: false,
+		showMulligan: false
 	}
 
 	getLogPath = async event => {
@@ -35,7 +39,11 @@ class App extends Component {
 
 		// testing
 		this.generateDeck();
-		this.drawCards(7);
+		await this.drawCards(7);
+		this.setState( {
+			showReset: true,
+			showMulligan: true
+		});
 
 	}
 
@@ -101,12 +109,15 @@ class App extends Component {
 	handleNewDraw = async () => {
 		await this.setState( {handSize: 7} );
 		this.drawCards(this.state.handSize);
+		this.setState( { showMulligan: true} );
 	}
 
 	handleMulligan = async () => {
 		const handSize = this.state.handSize - 1;
 		await this.setState( {handSize} );
 		this.drawCards(handSize);
+		if (handSize <= 0)
+			this.setState( {showMulligan: false} ); 
 	}
 
 	getCardImg = async id => {
@@ -129,12 +140,14 @@ class App extends Component {
 		return (
 			<div className="wrapper">
 				<LogReader ref={this.fileRef} getLogPath={this.getLogPath} />
-				<Hand text={this.state.logFileText} hand={this.state.hand} />
-				<button className="button" onClick={this.handleNewDraw}>Reset hand</button>
-				<button className="button" onClick={this.handleMulligan} >Mulligan</button>
+				<Hand hand={this.state.hand} />
+				{this.state.showReset ? <ResetHandButton handleNewDraw={this.handleNewDraw} /> : null}
+				{this.state.showMulligan ? <MulliganButton handleMulligan={this.handleMulligan} /> : null}
 			</div>
 			);
-	}
+	}                                                                              
+
+
 }
 
 export default App;

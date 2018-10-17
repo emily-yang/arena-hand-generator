@@ -7,13 +7,15 @@ class LogReader extends Component {
 	render() {
 		return (
 			<div className="container">
-				<form >
-					<input 
-					type="file" 
-					ref={this.pathRef} 
-					placeholder="Enter file location" 
-					onChange={this.props.getLogPath}
-					/>
+				<form>
+					<label> Select the path to the log file:
+						<input 
+						type="file" 
+						ref={this.pathRef} 
+						placeholder="Enter file location" 
+						onChange={this.props.getLogPath}
+						/>
+					</label>
 				</form>
 				<div className="results" ref={this.resultsRef}></div>
 			</div>
