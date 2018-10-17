@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './style.css';
 
 class LogReader extends Component {
 	pathRef = React.createRef();
@@ -6,11 +7,12 @@ class LogReader extends Component {
 
 	render() {
 		return (
-			<div className="container">
+			<div className="log-reader">
 				<form>
-					<label> Select the path to the log file:
+					<label className="label"> Select log file location
 						<input 
 						type="file" 
+						className="input button"
 						ref={this.pathRef} 
 						placeholder="Enter file location" 
 						onChange={this.props.getLogPath}

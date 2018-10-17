@@ -1,0 +1,65 @@
+.App {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  margin: 50px 5px;
+}
+
+.header {
+  font-size: 1.5em;
+}
+
+.header p {
+  max-width: 70%;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.log-reader {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+}
+
+.hand {
+  display: flex;
+  margin: 20px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: black;
+}
+
+.card {
+  margin: 15px 5px;
+  border-radius: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.label, .button {
+  font-family: 'Open Sans', sans-serif;
+  background-color: black;
+  color: white;
+  font-size: 1.1em;
+  padding: 10px;
+  margin: 0 15px;
+  border: none;
+}
+
+.label:hover, .button:hover {
+  background-color: #aaa;
+}

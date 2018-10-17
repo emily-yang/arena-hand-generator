@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Header from './Header';
 import LogReader from './LogReader';
 import Hand from './Hand';
 import ResetHandButton from './ResetHandButton';
 import MulliganButton from './MulliganButton';
 import { parseLog } from './parser';
-import './App.css';
+import './style.css';
 
 class App extends Component {
 
@@ -135,16 +136,18 @@ class App extends Component {
 		}
 	}
 
-
 	render() {
 		return (
 			<div className="wrapper">
+				<Header />
 				<LogReader ref={this.fileRef} getLogPath={this.getLogPath} />
 				<Hand hand={this.state.hand} />
-				{this.state.showReset ? <ResetHandButton handleNewDraw={this.handleNewDraw} /> : null}
-				{this.state.showMulligan ? <MulliganButton handleMulligan={this.handleMulligan} /> : null}
+				<div className="buttons">
+					{this.state.showReset ? <ResetHandButton handleNewDraw={this.handleNewDraw} /> : null}
+					{this.state.showMulligan ? <MulliganButton handleMulligan={this.handleMulligan} /> : null}
+				</div>
 			</div>
-			);
+		);
 	}                                                                              
 
 
