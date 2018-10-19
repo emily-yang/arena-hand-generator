@@ -1,25 +1,33 @@
-.App {
+#root {
+  margin: 0;
+}
+
+body {
   font-family: 'Open Sans', sans-serif;
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 
 .wrapper {
-  margin: 50px 5px;
+  margin: 0 5px 50px 5px;
 }
 
 .header {
   font-size: 1.5em;
+  background-color: black;
+  color: white;
+  padding: 25px 0 35px 0;
 }
 
 .header p {
-  max-width: 70%;
-  margin: 40px auto;
+  max-width: 60%;
+  margin: 10px auto;
   text-align: center;
 }
 
 .log-reader {
-  margin: 20px;
+  margin: 40px;
   display: flex;
   justify-content: center;
 }
@@ -34,7 +42,6 @@
 
 .hand {
   display: flex;
-  margin: 20px 0;
   justify-content: center;
   flex-wrap: wrap;
   background-color: black;
@@ -48,16 +55,18 @@
 .buttons {
   display: flex;
   justify-content: center;
+  margin-top: 30px;
 }
 
 .label, .button {
   font-family: 'Open Sans', sans-serif;
-  background-color: black;
+  background-color: #006600;
   color: white;
   font-size: 1.1em;
   padding: 10px;
   margin: 0 15px;
   border: none;
+  border-radius: 5px;
 }
 
 .label:hover, .button:hover {

@@ -6,7 +6,7 @@ class Hand extends Component {
 		return (
 			<div className="hand">
 				{(this.props.hand).map(img =>
-					<img className="card" src={img} key={`card${i++}`} alt="" />
+					<img className="card" draggable src={img} key={`card${i++}`} alt="" />
 				)}
 			</div>
 		);
