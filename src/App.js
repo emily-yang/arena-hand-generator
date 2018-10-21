@@ -102,6 +102,11 @@ class App extends Component {
 			}
 		}
 		hand = await Promise.all(hand.map(async id => await this.getCardInfo(id)));
+		hand = hand.sort((a,b) => {
+			if (a.cmc > b.cmc) return 1;
+			if (a.cmc < b.cmc) return -1;
+			return 0;
+		})
 		this.setState( {hand})
 		console.log('hand: ', hand);
 
@@ -133,6 +138,7 @@ class App extends Component {
 			return {
 				name: json.name,
 				img: json.image_uris.small,
+				cmc: json.cmc
 			}
 		} catch(e) {
 			console.error(e);
