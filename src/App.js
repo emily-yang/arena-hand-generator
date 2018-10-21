@@ -101,7 +101,7 @@ class App extends Component {
 				hand.push(deck[card]);
 			}
 		}
-		hand = await Promise.all(hand.map(async id => await this.getCardImg(id)));
+		hand = await Promise.all(hand.map(async id => await this.getCardInfo(id)));
 		this.setState( {hand})
 		console.log('hand: ', hand);
 
@@ -121,7 +121,7 @@ class App extends Component {
 			this.setState( {showMulligan: false} ); 
 	}
 
-	getCardImg = async id => {
+	getCardInfo = async id => {
 		const url = `https://api.scryfall.com/cards/mtgo/${id}`;
 		try {
 			const response = await fetch(url, {
@@ -130,7 +130,10 @@ class App extends Component {
 				redirect: "follow"
 			});
 			const json = await response.json();
-			return json.image_uris.small;
+			return {
+				name: json.name,
+				img: json.image_uris.small,
+			}
 		} catch(e) {
 			console.error(e);
 		}
